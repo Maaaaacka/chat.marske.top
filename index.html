@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>实时聊天室</title>
   <style>
-    :root {
-      --primary: #2ecc71;
-      --secondary: #3498db;
-      --background: #f8f9fa;
-      --success: #27ae60;
-      --warning: #f1c40f;
-      --danger: #e74c3c;
-      --text: #2c3e50;
-      --border-radius: 12px;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --spacing: 16px;
-      --primary-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
-      --secondary-gradient: linear-gradient(135deg, #3498db, #2980b9);
-    }
+:root {
+    --primary: #2ecc71;
+    --secondary: #3498db;
+    --background: #f8f9fa;
+    --success: #27ae60;
+    --warning: #f1c40f;
+    --danger: #e74c3c;
+    --text: #2c3e50;
+    --border-radius: 12px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --spacing: 16px;
+    --primary-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
+    --secondary-gradient: linear-gradient(135deg, #3498db, #2980b9);
+  }
 
     * {
       box-sizing: border-box;
@@ -33,6 +33,101 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
       line-height: 1.6;
       -webkit-tap-highlight-color: transparent;
+    }
+
+
+    #userModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #userModal .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      width: 90%;
+      max-width: 400px;
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    #userModal h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    #userModal input {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    #userModal input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2);
+    }
+
+    #userModal button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: var(--primary-gradient);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    #userModal button:hover {
+      opacity: 0.9;
+    }
+
+    #userModal button:active {
+      transform: scale(0.98);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 移动端适配调整 */
+    @media (max-width: 480px) {
+      #userModal .modal-content {
+        padding: 20px;
+      }
+
+      #userModal input {
+        padding: 10px 14px;
+      }
+
+      #userModal button {
+        padding: 12px;
+      }
     }
 
     .container {
@@ -257,8 +352,14 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -271,14 +372,24 @@
   <div class="announcement-modal" id="announcementModal">
     <h3>系统公告</h3>
     <div class="announcement-content">
-      <div><b>软件由Github@YShenZe开发</b></div>
-      <div class="warning-text">请文明聊天，禁止发送敏感内容</div>
-      <div>消息自动保存最近50条</div>
-      <div>技术支持QQ：1562415936</div>
+      <div>
+        <b>软件由Github@YShenZe开发</b>
+      </div>
+      <div class="warning-text">
+        请文明聊天，禁止发送敏感内容
+      </div>
+      <div>
+        消息自动保存最近50条
+      </div>
+      <div>
+        技术支持QQ：1562415936
+      </div>
     </div>
   </div>
 
-  <div class="loading-indicator" id="loading">连接中...</div>
+  <div class="loading-indicator" id="loading">
+    连接中...
+  </div>
 
   <div id="userModal" class="modal">
     <div class="modal-content">
@@ -294,16 +405,16 @@
       <div class="editor-section">
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input">
-          <input 
-            type="text" 
-            id="messageInput" 
-            placeholder="输入消息..."
-            onkeypress="if(event.keyCode === 13) sendMessage()"
+          <input
+          type="text"
+          id="messageInput"
+          placeholder="输入消息..."
+          onkeypress="if(event.keyCode === 13) sendMessage()"
           >
           <button onclick="sendMessage()">发送</button>
         </div>
         <div class="editor-status">
-          在线用户: <span id="userCount">0</span> | 
+          在线用户: <span id="userCount">0</span> |
           消息总数: <span id="messageCount">0</span>
         </div>
       </div>
@@ -334,152 +445,154 @@
     let reconnectAttempts = 0;
     const maxReconnectAttempts = 5;
     let currentUser = {
-        name: '',
-        qq: ''
+      name: '',
+      qq: ''
     };
 
     function setCookie(name, value, days) {
-        const d = new Date();
-        d.setTime(d.getTime() + (days*24*60*60*1000));
-        document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
+      const d = new Date();
+      d.setTime(d.getTime() + (days*24*60*60*1000));
+      document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
     }
 
     function getCookie(name) {
-        return document.cookie.split('; ').reduce((r, v) => {
-            const parts = v.split('=');
-            return parts[0] === name ? decodeURIComponent(parts[1]) : r
-        }, '');
+      return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? decodeURIComponent(parts[1]): r
+      }, '');
     }
 
     window.onload = function() {
-        const savedUser = getCookie('chatUser');
-        if (savedUser) {
-            try {
-                currentUser = JSON.parse(savedUser);
-                document.getElementById('userModal').style.display = 'none';
-                connect();
-            } catch(e) {
-                showUserModal();
-            }
-        } else {
-            showUserModal();
+      const savedUser = getCookie('chatUser');
+      if (savedUser) {
+        try {
+          currentUser = JSON.parse(savedUser);
+          document.getElementById('userModal').style.display = 'none';
+          connect();
+        } catch(e) {
+          showUserModal();
         }
+      } else {
+        showUserModal();
+      }
     };
 
     function showUserModal() {
-        document.getElementById('userModal').style.display = 'flex';
+      document.getElementById('userModal').style.display = 'flex';
     }
 
     function saveUserInfo() {
-        const nameInput = document.getElementById('userName');
-        const qqInput = document.getElementById('userQQ');
+      const nameInput = document.getElementById('userName');
+      const qqInput = document.getElementById('userQQ');
 
-        if (!nameInput.value.trim()) {
-            alert('用户名不能为空');
-            return;
-        }
+      if (!nameInput.value.trim()) {
+        alert('用户名不能为空');
+        return;
+      }
 
-        currentUser = {
-            name: nameInput.value.trim(),
-            qq: qqInput.value.trim()
-        };
+      currentUser = {
+        name: nameInput.value.trim(),
+        qq: qqInput.value.trim()
+      };
 
-        setCookie('chatUser', JSON.stringify(currentUser), 30);
-        document.getElementById('userModal').style.display = 'none';
-        connect();
+      setCookie('chatUser', JSON.stringify(currentUser), 30);
+      document.getElementById('userModal').style.display = 'none';
+      connect();
     }
 
     function connect() {
-        loading.style.display = 'block';
-        ws = new WebSocket('wss://wss.marske.top:28305');
+      loading.style.display = 'block';
+      ws = new WebSocket('wss://wss.marske.top:28305');
 
-        ws.onopen = () => {
-            localStorage.removeItem('chatHistory');
-            reconnectAttempts = 0;
-            loading.style.display = 'none';
-            ws.send(JSON.stringify({
-                type: 'join',
-                data: currentUser
-            }));
-        };
+      ws.onopen = () => {
+        localStorage.removeItem('chatHistory');
+        reconnectAttempts = 0;
+        loading.style.display = 'none';
+        ws.send(JSON.stringify({
+          type: 'join',
+          data: currentUser
+        }));
+      };
 
-        ws.onmessage = handleMessage;
+      ws.onmessage = handleMessage;
 
-        ws.onclose = () => {
-            if (reconnectAttempts < maxReconnectAttempts) {
-                setTimeout(connect, Math.min(1000 * reconnectAttempts, 5000));
-                reconnectAttempts++;
-                loading.textContent = `重连中 (${reconnectAttempts}/${maxReconnectAttempts})...`;
-                loading.style.display = 'block';
-            }
-        };
-
-        const handlers = {
-            history: data => {
-                data.messages.forEach(appendMessage);
-                messageCount.textContent = data.messages.length;
-            },
-            message: data => {
-                appendMessage(data);
-                messageCount.textContent = parseInt(messageCount.textContent) + 1;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            },
-            notification: data => {
-                // 修改通知显示方式
-                const notification = document.createElement('div');
-                notification.className = 'notification';
-                notification.textContent = `📢 ${data.message}`;
-                chatMessages.appendChild(notification);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            },
-            userlist: data => {
-                userCount.textContent = data.users.length;
-            }
-        };
-
-        function escapeHtml(unsafe) {
-            return unsafe.toString()
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+      ws.onclose = () => {
+        if (reconnectAttempts < maxReconnectAttempts) {
+          setTimeout(connect, Math.min(1000 * reconnectAttempts, 5000));
+          reconnectAttempts++;
+          loading.textContent = `重连中 (${reconnectAttempts}/${maxReconnectAttempts})...`;
+          loading.style.display = 'block';
         }
+      };
 
-        function appendMessage(msg) {
-            const isMe = msg.user === currentUser.name;
-            const msgEl = document.createElement('div');
-            msgEl.className = `message ${isMe ? 'me' : ''}`;
-            msgEl.innerHTML = `
-                <div class="message-header">
-                    <span>${escapeHtml(msg.user)}</span>
-                    <span>${new Date(msg.timestamp).toLocaleTimeString()}</span>
-                </div>
-                <div class="message-content">${escapeHtml(msg.content)}</div>
-            `;
-            chatMessages.appendChild(msgEl);
+      const handlers = {
+        history: data => {
+          data.messages.forEach(appendMessage);
+          messageCount.textContent = data.messages.length;
+        },
+        message: data => {
+          appendMessage(data);
+          messageCount.textContent = parseInt(messageCount.textContent) + 1;
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        },
+        notification: data => {
+          // 修改通知显示方式
+          const notification = document.createElement('div');
+          notification.className = 'notification';
+          notification.textContent = `📢 ${data.message}`;
+          chatMessages.appendChild(notification);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        },
+        userlist: data => {
+          userCount.textContent = data.users.length;
         }
+      };
 
-        function handleMessage(e) {
-            try {
-                const msg = JSON.parse(e.data);
-                if (handlers[msg.type]) handlers[msg.type](msg.data);
-            } catch (error) {
-                console.error('消息解析错误:', error);
-            }
+      function escapeHtml(unsafe) {
+        return unsafe.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+      }
+
+      function appendMessage(msg) {
+        const isMe = msg.user === currentUser.name;
+        const msgEl = document.createElement('div');
+        msgEl.className = `message ${isMe ? 'me': ''}`;
+        msgEl.innerHTML = `
+        <div class="message-header">
+        <span>${escapeHtml(msg.user)}</span>
+        <span>${new Date(msg.timestamp).toLocaleTimeString()}</span>
+        </div>
+        <div class="message-content">${escapeHtml(msg.content)}</div>
+        `;
+        chatMessages.appendChild(msgEl);
+      }
+
+      function handleMessage(e) {
+        try {
+          const msg = JSON.parse(e.data);
+          if (handlers[msg.type]) handlers[msg.type](msg.data);
+        } catch (error) {
+          console.error('消息解析错误:', error);
         }
+      }
     }
 
     function sendMessage() {
-        const content = messageInput.value.trim();
-        if (content && ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({
-                type: 'message',
-                data: { content }
-            }));
-            messageInput.value = '';
-            messageInput.focus();
-        }
+      const content = messageInput.value.trim();
+      if (content && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'message',
+          data: {
+            content
+          }
+        }));
+        messageInput.value = '';
+        messageInput.focus();
+      }
     }
   </script>
 </body>
