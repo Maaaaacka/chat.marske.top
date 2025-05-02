@@ -115,7 +115,6 @@
       }
     }
 
-    /* 移动端适配调整 */
     @media (max-width: 480px) {
       #userModal .modal-content {
         padding: 20px;
@@ -253,7 +252,6 @@
       z-index: 100;
     }
 
-    /* 新增公告按钮样式 */
     .announcement-button {
       position: fixed;
       top: 12px;
@@ -264,8 +262,8 @@
       font-size: 24px;
       cursor: pointer;
       color: var(--text);
-      padding: 8px;
-      border-radius: 50%;
+      padding: 4px;
+      border-radius: 5%;
       transition: background 0.2s;
     }
 
@@ -273,7 +271,6 @@
       background: rgba(0,0,0,0.05);
     }
 
-    /* 新增通知消息样式 */
     .notification {
       text-align: center;
       color: #666;
@@ -287,7 +284,6 @@
       transform: translateX(-50%);
     }
 
-    /* 公告模态框样式 */
     .announcement-modal {
       display: none;
       position: fixed;
@@ -347,7 +343,7 @@
       .announcement-button {
         top: 8px;
         right: 12px;
-        font-size: 20px;
+        font-size: 14px;
       }
     }
 
@@ -364,10 +360,8 @@
   </style>
 </head>
 <body>
-  <!-- 新增公告按钮 -->
-  <button class="announcement-button" onclick="showAnnouncement()">📢</button>
+  <button class="announcement-button" onclick="showAnnouncement()">公告</button>
 
-  <!-- 新增公告模态框 -->
   <div class="modal-overlay" id="announcementOverlay"></div>
   <div class="announcement-modal" id="announcementModal">
     <h3>系统公告</h3>
@@ -422,19 +416,16 @@
   </div>
 
   <script>
-    // 新增公告功能函数
     function showAnnouncement() {
       document.getElementById('announcementModal').style.display = 'block';
       document.getElementById('announcementOverlay').style.display = 'block';
     }
 
-    // 点击遮罩层关闭
     document.getElementById('announcementOverlay').onclick = function() {
       document.getElementById('announcementModal').style.display = 'none';
       this.style.display = 'none';
     }
 
-    // 原有其他代码保持不变...
     const loading = document.getElementById('loading');
     const chatMessages = document.getElementById('chatMessages');
     const messageInput = document.getElementById('messageInput');
@@ -536,10 +527,9 @@
           chatMessages.scrollTop = chatMessages.scrollHeight;
         },
         notification: data => {
-          // 修改通知显示方式
           const notification = document.createElement('div');
           notification.className = 'notification';
-          notification.textContent = `📢 ${data.message}`;
+          notification.textContent = `系统：${data.message}`;
           chatMessages.appendChild(notification);
           chatMessages.scrollTop = chatMessages.scrollHeight;
         },
